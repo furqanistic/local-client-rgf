@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import {
@@ -8,18 +8,18 @@ import {
   Update,
   Settings,
 } from '@mui/icons-material/'
+import { Link, useLocation } from 'react-router-dom'
 const Bar = styled.div`
+  background-color: #00000081;
   height: 100%;
-  min-height: 100vh;
-  background-color: #a18c3a81;
 `
 
 const Name = styled.div`
   font-size: 3rem;
   font-weight: 600;
-  color: #ffffff81;
+  color: #ffffffae;
   letter-spacing: 0.3rem;
-  background-color: #a18d3a;
+  background-color: #000000;
   max-width: 250px;
   display: flex;
   justify-content: center;
@@ -32,14 +32,15 @@ const ItemsWrapper = styled.div`
   padding: 1rem;
   max-width: 250px;
   height: 100vh;
-  background-color: #a18d3a;
+  color: white;
+  background-color: #000000;
 `
 const Item = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
   padding: 0.8rem 1rem;
-  color: #000000;
+  color: #ffffff;
   width: 100%;
   border-radius: 20px;
   transition: all 0.1s ease;
@@ -47,105 +48,80 @@ const Item = styled.div`
   cursor: pointer;
   &:hover {
     background-color: #000000;
-    color: #a18d3a;
+    color: #f6d75c;
   }
 `
 const ActiveItem = styled(Item)`
   background-color: #000000;
-  color: #a18d3a;
+  color: #f6d75c;
 `
 const ItemName = styled.p`
   font-size: 1rem;
   font-weight: 600;
+  width: 100%;
 `
 const ItemIcon = styled.span`
   display: flex;
   align-items: center;
   margin-right: 1rem;
+  width: 100%;
 `
 
 const Sidebar = () => {
-  const [selectedItem, setSelectedItem] = useState('Dashboard')
+  const [selectedItem, setSelectedItem] = useState()
+  const location = useLocation()
+
+  const items = [
+    {
+      name: 'Dashboard',
+      icon: <ViewTimelineOutlined />,
+      key: 'Dashboard',
+      path: '/dashboard',
+    },
+    { name: 'Booking', icon: <Add />, key: 'Booking', path: '/booking' },
+    { name: 'Update', icon: <Update />, key: 'Update', path: '/update' },
+    { name: 'Find', icon: <Search />, key: 'Find', path: '/find' },
+    {
+      name: 'Settings',
+      icon: <Settings />,
+      key: 'Settings',
+      path: '/setting',
+    },
+  ]
+
+  useEffect(() => {
+    const currentKey = items.find(
+      (item) => item.path === location.pathname
+    )?.key
+    if (currentKey) {
+      setSelectedItem(currentKey)
+    }
+  }, [location.pathname, items])
+
   return (
     <>
       <Bar>
         <Name>RGC</Name>
         <ItemsWrapper>
-          {selectedItem === 'Dashboard' ? (
-            <ActiveItem onClick={() => setSelectedItem('Dashboard')}>
-              <ItemIcon>
-                <ViewTimelineOutlined />
-              </ItemIcon>
-              <ItemName>Dashboard</ItemName>
-            </ActiveItem>
-          ) : (
-            <Item onClick={() => setSelectedItem('Dashboard')}>
-              <ItemIcon>
-                <ViewTimelineOutlined />
-              </ItemIcon>
-              <ItemName>Dashboard</ItemName>
-            </Item>
-          )}
-          {selectedItem === 'Booking' ? (
-            <ActiveItem onClick={() => setSelectedItem('Booking')}>
-              <ItemIcon>
-                <Add />
-              </ItemIcon>
-              <ItemName>Booking</ItemName>
-            </ActiveItem>
-          ) : (
-            <Item onClick={() => setSelectedItem('Booking')}>
-              <ItemIcon>
-                <Add />
-              </ItemIcon>
-              <ItemName>Booking</ItemName>
-            </Item>
-          )}
-          {selectedItem === 'Update' ? (
-            <ActiveItem onClick={() => setSelectedItem('Update')}>
-              <ItemIcon>
-                <Update />
-              </ItemIcon>
-              <ItemName>Update</ItemName>
-            </ActiveItem>
-          ) : (
-            <Item onClick={() => setSelectedItem('Update')}>
-              <ItemIcon>
-                <Update />
-              </ItemIcon>
-              <ItemName>Update</ItemName>
-            </Item>
-          )}
-          {selectedItem === 'Find' ? (
-            <ActiveItem onClick={() => setSelectedItem('Find')}>
-              <ItemIcon>
-                <Search />
-              </ItemIcon>
-              <ItemName>Find</ItemName>
-            </ActiveItem>
-          ) : (
-            <Item onClick={() => setSelectedItem('Find')}>
-              <ItemIcon>
-                <Search />
-              </ItemIcon>
-              <ItemName>Find</ItemName>
-            </Item>
-          )}
-          {selectedItem === 'Settings' ? (
-            <ActiveItem onClick={() => setSelectedItem('Settings')}>
-              <ItemIcon>
-                <Settings />
-              </ItemIcon>
-              <ItemName>Settings</ItemName>
-            </ActiveItem>
-          ) : (
-            <Item onClick={() => setSelectedItem('Settings')}>
-              <ItemIcon>
-                <Settings />
-              </ItemIcon>
-              <ItemName>Settings</ItemName>
-            </Item>
-          )}
+          {items.map((item) => (
+            <Link
+              to={item.path}
+              key={item.key}
+              style={{ textDecoration: 'none' }}
+            >
+              <Item
+                onClick={() => setSelectedItem(item.key)}
+                style={{
+                  backgroundColor:
+                    selectedItem === item.key ? '#ffffff' : 'transparent',
+                  color: selectedItem === item.key ? '#000000' : '#ffffff',
+                }}
+              >
+                <ItemIcon>{item.icon}</ItemIcon>
+                <ItemName>{item.name}</ItemName>
+              </Item>
+            </Link>
+          ))}
         </ItemsWrapper>
       </Bar>
     </>

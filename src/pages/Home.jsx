@@ -1,10 +1,13 @@
 import React from 'react'
 import Sidebar from '../components/Home/Sidebar'
+import Layout from '../Layout'
 
 const Home = () => {
   return (
     <>
-      <Sidebar />
+      <Layout>
+        <p>heheh</p>
+      </Layout>
     </>
   )
 }
