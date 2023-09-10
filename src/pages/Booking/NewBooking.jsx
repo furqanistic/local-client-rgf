@@ -98,10 +98,60 @@ const Left = styled.div`
 const Right = styled.div`
   flex: 1;
 `
-
+const DateEr = styled.div`
+  color: red;
+  font-size: 0.5rem;
+  margin-left: 5px;
+`
 const NewBooking = () => {
   const [dish, setDish] = useState('')
   const [dishes, setDishes] = useState([])
+  const [date, setDate] = useState('')
+  const [dateError, setDateError] = useState(null)
+
+  const handleDateChange = (e) => {
+    let newDate = e.target.value
+
+    // Remove all non-digit characters
+    newDate = newDate.replace(/\D/g, '')
+
+    // Add dashes between DD, MM, and YYYY
+    if (newDate.length <= 2) {
+      setDate(newDate)
+    } else if (newDate.length <= 4) {
+      setDate(`${newDate.slice(0, 2)}-${newDate.slice(2)}`)
+    } else {
+      setDate(
+        `${newDate.slice(0, 2)}-${newDate.slice(2, 4)}-${newDate.slice(4, 8)}`
+      )
+    }
+
+    // Validate the date if it is in the correct format
+    if (newDate.length === 8) {
+      const error = validateDate(newDate)
+      setDateError(error)
+    }
+  }
+
+  const validateDate = (date) => {
+    const regex = /^\d{2}-\d{2}-\d{4}$/
+    if (!regex.test(date)) {
+      return 'Wrong Date'
+    }
+
+    const [day, month, year] = date.split('-').map(Number)
+    const dateObj = new Date(year, month - 1, day)
+
+    if (
+      dateObj.getFullYear() !== year ||
+      dateObj.getMonth() + 1 !== month ||
+      dateObj.getDate() !== day
+    ) {
+      return 'Invalid date. Please enter a valid date.'
+    }
+
+    return null
+  }
 
   const handleAddDish = () => {
     if (dish) {
@@ -190,7 +240,13 @@ const NewBooking = () => {
             <InputWrap>
               <InputSet>
                 <FormText>Function Date:</FormText>
-                <FormInput type='text' placeholder='Per Head Amount...' />
+                <FormInput
+                  type='text'
+                  value={date}
+                  onChange={handleDateChange}
+                  placeholder='DD-MM-YYYY'
+                  maxLength='10'
+                />
               </InputSet>
             </InputWrap>
             <InputWrap>
@@ -263,6 +319,12 @@ const NewBooking = () => {
               <InputSet>
                 <FormText style={{ color: 'red' }}>Discount: </FormText>
                 <FormInput type='text' placeholder='Enter Discount...' />
+              </InputSet>
+            </InputWrap>
+            <InputWrap>
+              <InputSet>
+                <FormText style={{ color: 'green' }}>Total Amount: </FormText>
+                <FormInput type='text' readOnly />
               </InputSet>
             </InputWrap>
           </Right>
