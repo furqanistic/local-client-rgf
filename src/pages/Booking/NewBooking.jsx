@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../Layout'
 import styled from 'styled-components'
 import { Delete } from '@mui/icons-material'
@@ -9,7 +9,7 @@ const Wrap = styled.div`
   background-color: white;
   border-radius: 5px;
   padding: 2rem;
-  height: 100%;
+  min-height: 100%;
 `
 const Heading = styled.p`
   font-size: 2rem;
@@ -108,6 +108,52 @@ const NewBooking = () => {
   const [dishes, setDishes] = useState([])
   const [date, setDate] = useState('')
   const [dateError, setDateError] = useState(null)
+  const [perHead, setPerHead] = useState('')
+  const [foodAmount, setFoodAmount] = useState('')
+  const [stageAmount, setStageAmount] = useState('')
+  const [decorationLights, setDecorationLights] = useState('')
+  const [soundSystem, setSoundSystem] = useState('')
+  const [coldDrink, setColdDrink] = useState('')
+  const [mineralWater, setMineralWater] = useState('')
+  const [hallRentBalc, setHallRentBalc] = useState('')
+  const [extraDecor, setExtraDecor] = useState('')
+  const [others, setOthers] = useState('')
+  const [discount, setDiscount] = useState('')
+  const [totalAmount, setTotalAmount] = useState('')
+
+  useEffect(() => {
+    calculateTotalAmount()
+  }, [
+    perHead,
+    foodAmount,
+    stageAmount,
+    decorationLights,
+    soundSystem,
+    coldDrink,
+    mineralWater,
+    hallRentBalc,
+    extraDecor,
+    others,
+    discount,
+  ])
+
+  const calculateTotalAmount = () => {
+    const amounts = [
+      perHead,
+      foodAmount,
+      stageAmount,
+      decorationLights,
+      soundSystem,
+      coldDrink,
+      mineralWater,
+      hallRentBalc,
+      extraDecor,
+      others,
+    ].map(Number)
+    const total =
+      amounts.reduce((acc, curr) => acc + curr, 0) - Number(discount)
+    setTotalAmount(total)
+  }
 
   const handleDateChange = (e) => {
     let newDate = e.target.value
@@ -234,7 +280,12 @@ const NewBooking = () => {
             <InputWrap>
               <InputSet>
                 <FormText>Per Head </FormText>
-                <FormInput type='text' placeholder='Per Head Amount...' />
+                <FormInput
+                  type='text'
+                  placeholder='Per Head Amount...'
+                  value={perHead}
+                  onChange={(e) => setPerHead(e.target.value)}
+                />
               </InputSet>
             </InputWrap>
             <InputWrap>
@@ -264,67 +315,117 @@ const NewBooking = () => {
             <InputWrap>
               <InputSet>
                 <FormText>Food Amount: </FormText>
-                <FormInput type='text' placeholder='Enter Amount...' />
+                <FormInput
+                  type='text'
+                  placeholder='Enter Amount...'
+                  value={foodAmount}
+                  onChange={(e) => setFoodAmount(e.target.value)}
+                />
               </InputSet>
             </InputWrap>
             <InputWrap>
               <InputSet>
                 <FormText>Stage Amount: </FormText>
-                <FormInput type='text' placeholder='Enter Amount...' />
+                <FormInput
+                  type='text'
+                  placeholder='Enter Amount...'
+                  value={stageAmount}
+                  onChange={(e) => setStageAmount(e.target.value)}
+                />
               </InputSet>
             </InputWrap>
             <InputWrap>
               <InputSet>
                 <FormText>Decoration Lights: </FormText>
-                <FormInput type='text' placeholder='Enter Amount...' />
+                <FormInput
+                  type='text'
+                  placeholder='Enter Amount...'
+                  value={decorationLights}
+                  onChange={(e) => setDecorationLights(e.target.value)}
+                />
               </InputSet>
             </InputWrap>
             <InputWrap>
               <InputSet>
                 <FormText>Sound System: </FormText>
-                <FormInput type='text' placeholder='Enter Amount...' />
+                <FormInput
+                  type='text'
+                  placeholder='Enter Amount...'
+                  value={soundSystem}
+                  onChange={(e) => setSoundSystem(e.target.value)}
+                />
               </InputSet>
             </InputWrap>
             <InputWrap>
               <InputSet>
                 <FormText>Cold Drink: </FormText>
-                <FormInput type='text' placeholder='Enter Amount...' />
+                <FormInput
+                  type='text'
+                  placeholder='Enter Amount...'
+                  value={coldDrink}
+                  onChange={(e) => setColdDrink(e.target.value)}
+                />
               </InputSet>
             </InputWrap>
             <InputWrap>
               <InputSet>
                 <FormText>Mineral Water: </FormText>
-                <FormInput type='text' placeholder='Enter Amount...' />
+                <FormInput
+                  type='text'
+                  placeholder='Enter Amount...'
+                  value={mineralWater}
+                  onChange={(e) => setMineralWater(e.target.value)}
+                />
               </InputSet>
             </InputWrap>
             <InputWrap>
               <InputSet>
                 <FormText>Hall Rent Balc: </FormText>
-                <FormInput type='text' placeholder='Enter Amount...' />
+                <FormInput
+                  type='text'
+                  placeholder='Enter Amount...'
+                  value={hallRentBalc}
+                  onChange={(e) => setHallRentBalc(e.target.value)}
+                />
               </InputSet>
             </InputWrap>
             <InputWrap>
               <InputSet>
                 <FormText>Extra Decor: </FormText>
-                <FormInput type='text' placeholder='Enter Amount...' />
+                <FormInput
+                  type='text'
+                  placeholder='Enter Amount...'
+                  value={extraDecor}
+                  onChange={(e) => setExtraDecor(e.target.value)}
+                />
               </InputSet>
             </InputWrap>
             <InputWrap>
               <InputSet>
                 <FormText>Others: </FormText>
-                <FormInput type='text' placeholder='Enter Amount...' />
+                <FormInput
+                  type='text'
+                  placeholder='Enter Amount...'
+                  value={others}
+                  onChange={(e) => setOthers(e.target.value)}
+                />
               </InputSet>
             </InputWrap>
             <InputWrap>
               <InputSet>
                 <FormText style={{ color: 'red' }}>Discount: </FormText>
-                <FormInput type='text' placeholder='Enter Discount...' />
+                <FormInput
+                  type='text'
+                  placeholder='Enter Discount...'
+                  value={discount}
+                  onChange={(e) => setDiscount(e.target.value)}
+                />
               </InputSet>
             </InputWrap>
             <InputWrap>
               <InputSet>
                 <FormText style={{ color: 'green' }}>Total Amount: </FormText>
-                <FormInput type='text' readOnly />
+                <FormInput type='text' value={totalAmount} readOnly />
               </InputSet>
             </InputWrap>
           </Right>
